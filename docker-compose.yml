@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: cms
+      MYSQL_USER: cms
+      MYSQL_PASSWORD: cmspass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - db
+    environment:
+      PORT: 8080
+      JWT_SECRET: supersecret
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: cms
+      DB_PASS: cmspass
+      DB_NAME: cms
+      ALLOW_ORIGIN: http://localhost:3000
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
