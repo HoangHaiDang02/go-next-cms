@@ -7,6 +7,7 @@ import (
 type Config struct {
     Port        string
     AllowOrigin string
+    Env         string
     DBHost      string
     DBPort      string
     DBUser      string
@@ -25,6 +26,7 @@ func Load() *Config {
     return &Config{
         Port:        get("PORT", "8080"),
         AllowOrigin: os.Getenv("ALLOW_ORIGIN"),
+        Env:         get("APP_ENV", get("GO_ENV", get("ENV", ""))),
         DBHost:      get("DB_HOST", "localhost"),
         DBPort:      get("DB_PORT", "3306"),
         DBUser:      get("DB_USER", "cms"),
@@ -34,4 +36,3 @@ func Load() *Config {
         JWTSecret:   get("JWT_SECRET", "dev-secret"),
     }
 }
-

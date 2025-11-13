@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '../../lib/cms-api';
-import { saveToken } from '../../lib/utils';
+import { saveToken, isLoggedIn } from '../../lib/utils';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +11,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn()) router.replace('/admin');
+  }, [router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,21 +32,44 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h1>Đăng nhập quản trị</h1>
-      <form onSubmit={onSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%' }} />
-        </label>
-        <label>
-          Mật khẩu
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: '100%' }} />
-        </label>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-        <button type="submit" disabled={loading}>{loading ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>
-      </form>
+    <div className="container" style={{ maxWidth: 420 }}>
+      <div className="row justify-content-center">
+        <div className="col-12">
+          <div className="card shadow-sm mt-5">
+            <div className="card-body p-4">
+              <h1 className="h4 text-center mb-3">Đăng nhập quản trị</h1>
+              {error && <div className="alert alert-danger" role="alert">{error}</div>}
+              <form onSubmit={onSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Mật khẩu</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                  {loading ? 'Đang đăng nhập…' : 'Đăng nhập'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-

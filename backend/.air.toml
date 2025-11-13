@@ -1,0 +1,31 @@
+# Air configuration for live reload in backend
+# Docs: https://github.com/air-verse/air
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# Build the app binary into tmp/, using the app entrypoint
+cmd = "go build -trimpath -ldflags=\"-s -w\" -o ./tmp/main ./cmd/app"
+bin = "./tmp/main"
+full_bin = ""
+include_ext = ["go"]
+exclude_dir = ["tmp", "vendor", ".git"]
+exclude_file = []
+exclude_regex = []
+exclude_unchanged = true
+delay = 500
+stop_on_error = true
+
+[log]
+time = true
+
+[color]
+main = "magenta"
+build = "yellow"
+watcher = "cyan"
+app = "green"
+
+[misc]
+clean_on_exit = true
+

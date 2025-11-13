@@ -1,14 +1,41 @@
-FROM golang:1.21-alpine AS builder
+# =================== BASE ===================
+FROM golang:1.25 AS base
 WORKDIR /app
-COPY go.mod ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/server ./cmd/app
 
-FROM gcr.io/distroless/base-debian12:nonroot
+COPY go.mod go.sum ./
+RUN go mod download
+
+
+# =================== DEVELOPMENT ===================
+FROM base AS development
 WORKDIR /app
-ENV PORT=8080
-COPY --from=builder /out/server /app/server
-USER nonroot:nonroot
+
+RUN go install github.com/air-verse/air@latest
+
+ENV PATH="/go/bin:${PATH}"
+
+COPY . .
+
+CMD ["air"]
+
+
+# =================== PRODUCTION BUILDER ===================
+FROM base AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o main ./cmd/app
+
+
+# =================== PRODUCTION RUNTIME ===================
+FROM gcr.io/distroless/static:nonroot AS production
+
+WORKDIR /app
+ENV GIN_MODE=release
+
+COPY --from=builder /app/main .
+
 EXPOSE 8080
-ENTRYPOINT ["/app/server"]
+CMD ["./main"]

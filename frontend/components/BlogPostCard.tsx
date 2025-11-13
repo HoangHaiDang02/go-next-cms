@@ -11,15 +11,16 @@ export type PostSummary = {
 
 export function BlogPostCard({ post }: { post: PostSummary }) {
   return (
-    <article style={{ border: '1px solid #eaeaea', padding: '1rem', borderRadius: 8 }}>
-      <h3 style={{ margin: 0 }}>
-        <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-      </h3>
-      <p style={{ margin: '0.5rem 0', color: '#555' }}>{post.excerpt}</p>
-      {post.publishedAt && (
-        <small style={{ color: '#888' }}>{new Date(post.publishedAt).toLocaleDateString()}</small>
-      )}
-    </article>
+    <div className="card h-100 shadow-sm">
+      <div className="card-body">
+        <h5 className="card-title mb-2">
+          <Link className="stretched-link text-decoration-none" href={`/blog/${post.slug}`}>{post.title}</Link>
+        </h5>
+        <p className="card-text text-muted mb-2">{post.excerpt}</p>
+        {post.publishedAt && (
+          <small className="text-secondary">{new Date(post.publishedAt).toLocaleDateString()}</small>
+        )}
+      </div>
+    </div>
   );
 }
-

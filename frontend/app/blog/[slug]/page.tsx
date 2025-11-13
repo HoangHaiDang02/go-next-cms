@@ -1,22 +1,40 @@
-import { getPostBySlug } from '../../../lib/cms-api';
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { getPostBySlug, type Post } from '../../../lib/cms-api';
 import Image from 'next/image';
 
-type Props = { params: { slug: string } };
+export default function BlogPostPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  useEffect(() => {
+    if (!slug) return;
+    getPostBySlug(slug)
+      .then(setPost)
+      .catch(() => setError('Failed to load post'))
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
   if (!post) return <div>Post not found.</div>;
+
   return (
-    <article>
-      <h1>{post.title}</h1>
+    <article className="container">
+      <h1 className="display-6 mb-3">{post.title}</h1>
       {post.coverImageUrl ? (
-        <Image src={post.coverImageUrl} alt={post.title} width={800} height={400} />
+        <div className="mb-3">
+          <Image className="img-fluid rounded" src={post.coverImageUrl} alt={post.title} width={800} height={400} />
+        </div>
       ) : null}
-      <p style={{ color: '#666' }}>{post.excerpt}</p>
-      <div>
-        <pre style={{ whiteSpace: 'pre-wrap', font: 'inherit' }}>{post.content}</pre>
+      <p className="text-muted">{post.excerpt}</p>
+      <div className="mt-3">
+        <pre className="fs-6" style={{ whiteSpace: 'pre-wrap', font: 'inherit' }}>{post.content}</pre>
       </div>
     </article>
   );
 }
-
