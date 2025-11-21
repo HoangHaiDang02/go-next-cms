@@ -1,0 +1,15 @@
+#root {
+    display: flex;
+
+    /* 2. Dùng Flex để chia dọc: Header trên, Main dưới */
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter Variable', sans-serif;
+}

@@ -1,0 +1,38 @@
+/* NavbarNested.module.css */
+.navbar {
+    width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    /* Giữ nguyên phần border và background */
+    border-right: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+}
+
+.header {
+    padding: var(--mantine-spacing-md);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Header sẽ có chiều cao tự nhiên dựa theo content */
+}
+
+.links {
+    /* QUAN TRỌNG: flex: 1 giúp phần này giãn nở tối đa, đẩy footer xuống đáy */
+    flex: 1;
+
+    margin-top: var(--mantine-spacing-md);
+    margin-left: var(--mantine-spacing-md);
+    margin-right: var(--mantine-spacing-md);
+
+    /* Thêm cái này để đảm bảo ScrollArea hoạt động mượt mà trong flex container */
+    overflow: hidden;
+}
+
+.footer {
+    border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    padding: var(--mantine-spacing-md);
+    /* Footer sẽ nằm dính ở đáy vì .links ở trên đã chiếm hết chỗ trống */
+}

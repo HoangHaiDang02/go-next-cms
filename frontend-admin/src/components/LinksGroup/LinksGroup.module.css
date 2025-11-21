@@ -1,0 +1,10 @@
+.nestedLinks {
+    /* Vẽ đường kẻ dọc */
+    border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+
+    /* Căn chỉnh vị trí đường kẻ (thường canh giữa icon của cha) */
+    margin-left: 1.6rem;
+
+    /* Đẩy các link con ra xa đường kẻ một chút */
+    padding-left: 0.5rem;
+}
